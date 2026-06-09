@@ -72,7 +72,11 @@ body {
 .config-panel::-webkit-scrollbar-track { background: transparent; }
 .config-panel::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
 
-/* iOS notch / home-indicator safe area */
+/* iOS safe area — top (status bar / notch) and bottom (home indicator) */
+.safe-area-pt {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
 .safe-area-pb {
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
 }

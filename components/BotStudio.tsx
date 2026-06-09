@@ -128,7 +128,7 @@ export default function BotStudio() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950 overflow-hidden">
+    <div className="flex flex-col h-screen bg-slate-950 overflow-hidden safe-area-pt">
       <Navbar />
 
       <div className="flex flex-1 overflow-hidden">
