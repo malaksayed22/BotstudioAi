@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "BotStudio — Enterprise Chatbot Configurator",
   description: "Configure and deploy AI-powered department assistants in seconds. A TKMiND portfolio demo.",
   keywords: ["AI chatbot", "enterprise", "no-code", "LLM", "TKMiND"],
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

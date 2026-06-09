@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { Settings, MessageSquare } from 'lucide-react';
 import { BotConfig, Message } from '@/types';
 import { DEFAULT_CONFIG, PRESETS } from '@/lib/presets';
 import Navbar from './Navbar';
@@ -16,6 +17,7 @@ export default function BotStudio() {
   const [activePreset, setActivePreset] = useState<string | null>('it');
   const [configApplied, setConfigApplied] = useState(false);
   const [shareToast, setShareToast] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'config' | 'chat'>('config');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -34,6 +36,7 @@ export default function BotStudio() {
     };
     setMessages([welcome]);
     setConfigApplied(true);
+    setMobileTab('chat');
     scrollToBottom();
   };
 
@@ -61,12 +64,9 @@ export default function BotStudio() {
       .map((m) => ({ role: m.role, content: m.content }));
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: config.model ?? 'gpt-4o',
           max_tokens: 1000,
@@ -130,9 +130,14 @@ export default function BotStudio() {
   return (
     <div className="flex flex-col h-screen bg-slate-950 overflow-hidden">
       <Navbar />
+
       <div className="flex flex-1 overflow-hidden">
-        {/* Left config panel */}
-        <aside className="w-95 shrink-0 bg-slate-900 border-r border-slate-800 flex flex-col overflow-hidden">
+        {/* Config Panel — full-width on mobile when config tab active, fixed sidebar on desktop */}
+        <aside className={`
+          w-full md:w-95 md:shrink-0
+          bg-slate-900 border-r border-slate-800 flex-col overflow-hidden
+          ${mobileTab === 'config' ? 'flex' : 'hidden'} md:flex
+        `}>
           <div className="config-panel flex-1 overflow-y-auto">
             <ConfigPanel
               config={config}
@@ -145,8 +150,11 @@ export default function BotStudio() {
           </div>
         </aside>
 
-        {/* Right chat panel */}
-        <main className="flex-1 flex flex-col bg-slate-950 overflow-hidden">
+        {/* Chat Panel — full-width on mobile when chat tab active, fills remaining space on desktop */}
+        <main className={`
+          flex-1 flex-col bg-slate-950 overflow-hidden
+          ${mobileTab === 'chat' ? 'flex' : 'hidden'} md:flex
+        `}>
           <ChatPanel
             config={config}
             messages={messages}
@@ -161,6 +169,33 @@ export default function BotStudio() {
           />
         </main>
       </div>
+
+      {/* Mobile-only bottom tab bar */}
+      <nav className="md:hidden shrink-0 flex bg-slate-900 border-t border-slate-800 safe-area-pb">
+        <button
+          type="button"
+          onClick={() => setMobileTab('config')}
+          className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium transition-colors cursor-pointer
+            ${mobileTab === 'config' ? 'text-indigo-400' : 'text-slate-500'}`}
+        >
+          <Settings size={20} />
+          Configure
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab('chat')}
+          className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium transition-colors cursor-pointer
+            ${mobileTab === 'chat' ? 'text-indigo-400' : 'text-slate-500'}`}
+        >
+          <div className="relative">
+            <MessageSquare size={20} />
+            {configApplied && mobileTab !== 'chat' && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400" />
+            )}
+          </div>
+          Chat
+        </button>
+      </nav>
     </div>
   );
 }

@@ -71,3 +71,17 @@ body {
 .config-panel::-webkit-scrollbar { width: 4px; }
 .config-panel::-webkit-scrollbar-track { background: transparent; }
 .config-panel::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
+
+/* iOS notch / home-indicator safe area */
+.safe-area-pb {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Prevent iOS auto-zoom on focused inputs (triggers when font-size < 16px) */
+@media (max-width: 767px) {
+  input[type="text"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}

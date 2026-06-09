@@ -51,7 +51,7 @@ function MessageBubble({ message, config }: { message: Message; config: BotConfi
   if (isUser) {
     return (
       <div className="flex flex-col items-end gap-1 animate-fade-in-up">
-        <div className="bg-indigo-600 text-white text-sm rounded-2xl rounded-br-none px-4 py-2.5 max-w-[75%] leading-relaxed">
+        <div className="bg-indigo-600 text-white text-sm rounded-2xl rounded-br-none px-4 py-2.5 max-w-[85%] sm:max-w-[75%] leading-relaxed">
           {message.content}
         </div>
         <span className="text-[10px] text-slate-500 pr-1">{formatTime(message.timestamp)}</span>
@@ -59,11 +59,10 @@ function MessageBubble({ message, config }: { message: Message; config: BotConfi
     );
   }
 
-  // Assistant message
   return (
     <div className="flex items-end gap-2 animate-fade-in-up">
       <BotAvatar name={config.name} avatarColor={config.avatarColor} />
-      <div className="flex flex-col gap-1 max-w-[75%]">
+      <div className="flex flex-col gap-1 max-w-[85%] sm:max-w-[75%]">
         <div
           className={`text-sm text-white rounded-2xl rounded-bl-none px-4 py-2.5 leading-relaxed
             ${message.isError
@@ -110,18 +109,17 @@ export default function ChatPanel({
   return (
     <div className="flex flex-col h-full">
       {/* Chat Header */}
-      <div className="h-16 shrink-0 flex items-center justify-between px-5 bg-slate-900 border-b border-slate-800">
-        <div className="flex items-center gap-3">
-          {/* Large avatar */}
-          <div className={`w-10 h-10 rounded-full ${color.bg} flex items-center justify-center font-bold text-white text-lg`}>
+      <div className="h-16 shrink-0 flex items-center justify-between px-4 sm:px-5 bg-slate-900 border-b border-slate-800 gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full ${color.bg} flex items-center justify-center font-bold text-white text-base sm:text-lg`}>
             {config.name.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <p className="text-white font-semibold text-sm leading-tight">{config.name}</p>
-            <p className="text-slate-400 text-xs">{config.department}</p>
+          <div className="min-w-0">
+            <p className="text-white font-semibold text-sm leading-tight truncate">{config.name}</p>
+            <p className="text-slate-400 text-xs truncate">{config.department}</p>
           </div>
           {configApplied && (
-            <div className="ml-1 flex items-center gap-1.5 bg-emerald-950 border border-emerald-800 rounded-full px-2.5 py-1">
+            <div className="shrink-0 ml-1 flex items-center gap-1.5 bg-emerald-950 border border-emerald-800 rounded-full px-2 sm:px-2.5 py-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-dot" />
               <span className="text-emerald-400 text-[10px] font-medium">Online</span>
             </div>
@@ -129,15 +127,16 @@ export default function ChatPanel({
         </div>
 
         {/* Share button */}
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
+            type="button"
             onClick={onShare}
-            className="flex items-center gap-2 bg-slate-800 border border-slate-700 hover:border-slate-500
-              text-slate-300 hover:text-white text-xs font-medium rounded-lg px-3 py-2
+            className="flex items-center gap-1.5 sm:gap-2 bg-slate-800 border border-slate-700 hover:border-slate-500
+              text-slate-300 hover:text-white text-xs font-medium rounded-lg px-2.5 sm:px-3 py-2
               transition-all duration-200 cursor-pointer"
           >
             <Share2 size={13} />
-            Share
+            <span className="hidden sm:inline">Share</span>
           </button>
           {shareToast && (
             <div className="absolute right-0 top-10 bg-slate-700 border border-slate-600 text-white text-xs font-medium
@@ -149,18 +148,17 @@ export default function ChatPanel({
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4 sm:py-5 space-y-4 scrollbar-thin">
         {!configApplied ? (
-          <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center">
               <MessageSquare size={28} className="text-slate-600" />
             </div>
             <div>
               <p className="text-slate-400 font-medium text-sm">Your assistant is ready to configure</p>
-              <p className="text-slate-600 text-xs mt-1">Set up your bot on the left and click <span className="text-indigo-400">Apply Configuration</span> to start chatting</p>
+              <p className="text-slate-600 text-xs mt-1">Set up your bot and tap <span className="text-indigo-400">Apply Configuration</span> to start chatting</p>
             </div>
-            {/* Decorative preview cards */}
-            <div className="mt-2 flex gap-2">
+            <div className="mt-2 flex flex-wrap justify-center gap-2">
               {['IT Helpdesk', 'HR', 'Sales', 'Legal', 'DevOps'].map((dept) => (
                 <span key={dept} className="text-[10px] text-slate-600 bg-slate-800/50 border border-slate-800 rounded-full px-2.5 py-1">
                   {dept}
@@ -180,7 +178,7 @@ export default function ChatPanel({
       </div>
 
       {/* Chat Input */}
-      <div className="shrink-0 px-5 py-4 bg-slate-900 border-t border-slate-800">
+      <div className="shrink-0 px-4 sm:px-5 py-3 sm:py-4 bg-slate-900 border-t border-slate-800 safe-area-pb">
         <div className={`flex gap-3 items-center bg-slate-800 border rounded-xl px-4 py-2.5 transition-all duration-200
           ${configApplied ? 'border-slate-700 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500/20' : 'border-slate-800 opacity-50'}
         `}>
@@ -195,10 +193,12 @@ export default function ChatPanel({
                 ? 'Apply a configuration to start chatting...'
                 : `Message ${config.name}...`
             }
-            className="flex-1 bg-transparent text-white text-sm placeholder:text-slate-500
+            className="flex-1 bg-transparent text-white text-base sm:text-sm placeholder:text-slate-500
               focus:outline-none disabled:cursor-not-allowed"
           />
           <button
+            type="button"
+            aria-label="Send message"
             onClick={onSend}
             disabled={!canSend}
             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 shrink-0 cursor-pointer
